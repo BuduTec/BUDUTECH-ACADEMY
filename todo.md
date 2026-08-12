@@ -105,6 +105,10 @@ Use the existing React 19, Tailwind 4, Express 4, tRPC 11, Drizzle, and Manus Au
 - [ ] Add configurable event registration and replay access rules
 - [ ] Audit all current routers for real admin persistence, safe error handling, and security boundaries
 - [ ] Add frontend routes and UI; the current scaffold is not yet a finished LMS
+- [x] Add a Vercel-compatible serverless API entrypoint and SPA rewrite configuration to resolve the production 404.
+- [ ] Redeploy on Vercel after the serverless routing change and verify both the Vercel URL and academy.budutech.app no longer return 404.
+- [ ] Smoke-test live Vercel routes: `/`, `/courses`, `/dashboard`, `/api/trpc`, and the OAuth callback path.
+- [ ] Confirm required Vercel environment variables and domain/DNS assignment after the live deployment succeeds.
 
 ## Brief acceptance criteria
 
