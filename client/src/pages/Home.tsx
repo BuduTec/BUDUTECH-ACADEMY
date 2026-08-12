@@ -1,33 +1,63 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import AcademyHeader from "@/components/AcademyHeader";
+import Countdown from "@/components/Countdown";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Streamdown } from 'streamdown';
+import { Skeleton } from "@/components/ui/skeleton";
+import { startLogin } from "@/const";
+import { trpc } from "@/lib/trpc";
+import { ArrowRight, CheckCircle2, ChevronRight, CirclePlay, GraduationCap, Layers3, Sparkles, Trophy, UsersRound } from "lucide-react";
+import { Link } from "wouter";
 
-/**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Workflow, Frontend Best Practices, Design Guide and Common Pitfalls
- */
+const heroImage = "/manus-storage/budutech-hero-workspace_7006b24f.jpg";
+
+function sectionTitle(eyebrow: string, title: string, body: string) {
+  return <div className="max-w-2xl"><div className="mb-4 font-mono-brand text-xs font-medium uppercase tracking-[0.19em] text-[#2c7e7c]">{eyebrow}</div><h2 className="font-display text-4xl leading-[1.08] tracking-[-0.04em] text-[#163c3e] sm:text-5xl">{title}</h2><p className="mt-5 text-[1.02rem] leading-7 text-[#557174]">{body}</p></div>;
+}
+
 export default function Home() {
-  // The useAuth hook provides authentication state.
-  // To implement login/logout, call logout(), or start login from an event
-  // handler: onClick={() => startLogin()} (imported from "@/const"). Never call
-  // startLogin() during render (no href={startLogin()}) — it mints a one-time
-  // nonce cookie and must run only at the moment of navigation.
-  let { user, loading, error, isAuthenticated, logout } = useAuth();
+  const { data, isLoading } = trpc.academy.getHomeData.useQuery();
+  const { isAuthenticated } = useAuth();
+  const event = data?.activeEvent;
+  const registrationLabel = data?.registrationCount ? `${data.registrationCount.toLocaleString()} registered` : "Registration is open";
 
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
+  return <div className="min-h-screen overflow-hidden bg-[#fbfcf7] text-[#163c3e]">
+    <AcademyHeader />
+    <main>
+      <section className="relative isolate overflow-hidden bg-[#123a3c] pb-16 pt-10 text-white sm:pb-24 lg:pt-14">
+        <div className="absolute inset-0 noise-grid opacity-60" /><div className="absolute -right-40 top-0 h-[38rem] w-[38rem] rounded-full bg-[#1e6d6c] blur-3xl opacity-45" /><div className="absolute bottom-0 left-[18%] h-56 w-56 rounded-full bg-[#b9dd75] blur-[130px] opacity-25" />
+        <div className="container relative grid gap-12 lg:grid-cols-[1.04fr_.96fr] lg:items-center">
+          <div className="max-w-3xl pt-6 lg:pt-12">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#d4f36b]/25 bg-[#d4f36b]/10 px-3 py-1.5 text-xs font-semibold text-[#e3f8a1]"><Sparkles className="h-3.5 w-3.5" /> Free live training · {registrationLabel}</div>
+            <h1 className="font-display text-[3.35rem] leading-[0.96] tracking-[-0.055em] sm:text-7xl lg:text-[5.2rem]">Build a useful skill.<br/><em className="text-[#d4f36b]">Build what’s next.</em></h1>
+            <p className="mt-7 max-w-xl text-lg leading-8 text-[#dce8e5]/80">BuduTech Academy gives ambitious beginners a practical path into digital work — from first website to real-world confidence.</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">{isAuthenticated ? <Link href="/dashboard"><Button size="lg" className="h-12 bg-[#d4f36b] px-6 text-[#123a3c] hover:bg-[#c7e85c]">Open my learning <ArrowRight className="ml-1 h-4 w-4" /></Button></Link> : <Link href="/register"><Button size="lg" className="h-12 bg-[#d4f36b] px-6 text-[#123a3c] hover:bg-[#c7e85c]">Reserve a free seat <ArrowRight className="ml-1 h-4 w-4" /></Button></Link>}<Link href="/courses"><Button size="lg" variant="outline" className="h-12 border-white/20 bg-white/5 px-6 text-white hover:bg-white/10 hover:text-white">Explore the Academy</Button></Link></div>
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#dce8e5]/75"><span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#d4f36b]" /> Beginner-friendly</span><span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#d4f36b]" /> Practical learning</span><span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[#d4f36b]" /> Learn at your pace</span></div>
+          </div>
+          <div className="relative mx-auto w-full max-w-[520px] lg:mt-12">
+            <div className="absolute -inset-5 rounded-[2.25rem] border border-white/10 bg-white/5 rotate-3" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-[#1d5152] academy-shadow">
+              <img src={heroImage} alt="Professional working at a dual-screen web development workspace" className="h-[290px] w-full object-cover opacity-85 sm:h-[360px]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#103638] via-[#103638]/15 to-transparent" />
+              <div className="absolute inset-x-5 bottom-5 rounded-2xl border border-white/15 bg-[#123a3c]/85 p-4 backdrop-blur-md"><div className="flex items-start justify-between gap-4"><div><div className="font-mono-brand text-[0.65rem] uppercase tracking-[0.16em] text-[#d4f36b]">Live class</div><div className="mt-1.5 text-sm font-semibold leading-5">{event?.title ?? "New live training coming soon"}</div></div><CirclePlay className="mt-1 h-8 w-8 shrink-0 text-[#d4f36b]" /></div></div>
+            </div>
+            <div className="absolute -bottom-7 -left-5 rounded-2xl border border-[#d5e7da] bg-[#fcfff8] p-4 soft-shadow"><div className="flex items-center gap-3"><div className="grid h-10 w-10 place-items-center rounded-xl bg-[#e9f5d0] text-[#245b5b]"><Trophy className="h-5 w-5" /></div><div><div className="text-xs font-medium text-[#688183]">Share your referral link</div><div className="mt-0.5 text-sm font-semibold text-[#123a3c]">Build your learning circle</div></div></div></div>
+          </div>
+        </div>
+      </section>
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
-      </main>
-    </div>
-  );
+      <section className="border-b border-[#dce5d9] bg-[#f1f7ed] py-5"><div className="container flex flex-wrap items-center justify-between gap-4"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#d4f36b] text-[#123a3c]"><UsersRound className="h-4 w-4" /></span><div><div className="text-sm font-semibold text-[#173d3f]">{registrationLabel}</div><div className="text-xs text-[#688183]">Your place is created from a real registration record.</div></div></div>{event ? <div className="flex items-center gap-3"><div className="hidden text-right sm:block"><div className="text-xs font-medium text-[#688183]">Live training begins</div><div className="text-sm font-semibold text-[#173d3f]">{new Date(event.startDate).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</div></div><Link href="/register"><Button className="bg-[#123a3c] text-white hover:bg-[#214f50]">Register now <ChevronRight className="ml-1 h-4 w-4" /></Button></Link></div> : null}</div></section>
+
+      <section className="bg-[#123a3c] py-14 sm:py-18"><div className="container grid gap-9 lg:grid-cols-[1fr_.9fr] lg:items-center"><div>{event ? <><div className="font-mono-brand text-xs uppercase tracking-[0.18em] text-[#d4f36b]">{event.state === "upcoming" ? "Your next live session" : event.state === "live" ? "We’re live now" : event.state === "replay" ? "Replay available" : "Training update"}</div><h2 className="mt-3 max-w-xl font-display text-4xl leading-[1.05] tracking-[-0.045em] text-white sm:text-5xl">{event.title}</h2><p className="mt-4 max-w-xl leading-7 text-white/65">{event.description}</p></> : <><div className="font-mono-brand text-xs uppercase tracking-[0.18em] text-[#d4f36b]">Campaign updates</div><h2 className="mt-3 font-display text-4xl text-white">The next live session is being prepared.</h2></>}</div><div className="rounded-[1.4rem] border border-white/10 bg-white/[0.06] p-5 sm:p-6">{event?.state === "upcoming" ? <><div className="mb-4 text-sm font-medium text-white/70">Count down to the practical session</div><Countdown startDate={event.startDate} /><Link href="/register"><Button className="mt-5 h-11 w-full bg-[#d4f36b] text-[#123a3c] hover:bg-[#c7e85c]">Reserve your free seat</Button></Link></> : event?.state === "live" ? <a href={event.youtubeLiveUrl ?? "#"} target="_blank" rel="noreferrer"><Button className="h-11 w-full bg-[#d4f36b] text-[#123a3c] hover:bg-[#c7e85c]">Join the live session <CirclePlay className="ml-2 h-4 w-4" /></Button></a> : event?.state === "replay" ? <a href={event.replayUrl ?? "#"} target="_blank" rel="noreferrer"><Button className="h-11 w-full bg-[#d4f36b] text-[#123a3c] hover:bg-[#c7e85c]">Watch the replay <CirclePlay className="ml-2 h-4 w-4" /></Button></a> : <Link href="/register"><Button className="h-11 w-full bg-[#d4f36b] text-[#123a3c] hover:bg-[#c7e85c]">Get the next update</Button></Link>}</div></div></section>
+
+      <section className="py-20 sm:py-28"><div className="container">{sectionTitle("Learn by doing", "Technology education that turns attention into ability.", "A focused Academy for people who want a useful digital skill — without the noise, intimidating jargon, or disconnected tutorials.")}<div className="mt-12 grid gap-4 md:grid-cols-3"><div className="rounded-3xl border border-[#dce5d9] bg-white p-6 soft-shadow"><div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#e9f5d0] text-[#245b5b]"><Layers3 className="h-5 w-5" /></div><h3 className="mt-7 text-xl font-semibold tracking-[-0.03em]">A practical path</h3><p className="mt-2.5 leading-7 text-[#607a7c]">Courses are structured into approachable modules and lessons, so your next step is always clear.</p></div><div className="rounded-3xl border border-[#dce5d9] bg-white p-6 soft-shadow"><div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#e9f5d0] text-[#245b5b]"><GraduationCap className="h-5 w-5" /></div><h3 className="mt-7 text-xl font-semibold tracking-[-0.03em]">Built for beginners</h3><p className="mt-2.5 leading-7 text-[#607a7c]">Start where you are. Learn concepts in context, then turn them into work you can understand and use.</p></div><div className="rounded-3xl border border-[#dce5d9] bg-white p-6 soft-shadow"><div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#e9f5d0] text-[#245b5b]"><Trophy className="h-5 w-5" /></div><h3 className="mt-7 text-xl font-semibold tracking-[-0.03em]">Share the opportunity</h3><p className="mt-2.5 leading-7 text-[#607a7c]">Bring your community along with a unique referral link and follow your verified progress from your dashboard.</p></div></div></div></section>
+
+      <section className="border-y border-[#dce5d9] bg-[#f1f7ed] py-20 sm:py-24"><div className="container"><div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">{sectionTitle("Featured learning", "Choose a direction. Start with a useful outcome.", "Each program is added by the Academy team and organized for an experience that carries from first lesson to completion.")}<Link href="/courses"><Button variant="outline" className="shrink-0 border-[#9abbb1] text-[#17494b]">See all courses <ArrowRight className="ml-2 h-4 w-4" /></Button></Link></div><div className="mt-10 grid gap-5 md:grid-cols-3">{isLoading ? Array.from({ length: 3 }).map((_, i) => <Skeleton className="h-[280px] rounded-3xl" key={i}/>) : data?.featuredCourses.length ? data.featuredCourses.map((course) => <Link key={course.id} href={`/courses/${course.slug}`} className="group rounded-3xl border border-[#dce5d9] bg-white p-6 transition-transform hover:-translate-y-1 soft-shadow"><div className="flex items-start justify-between"><span className="rounded-full bg-[#e6f0eb] px-3 py-1 text-xs font-semibold text-[#306563]">{course.category}</span><ArrowRight className="h-5 w-5 text-[#759698] transition-transform group-hover:translate-x-1" /></div><h3 className="mt-12 text-2xl font-semibold leading-tight tracking-[-0.04em] text-[#163c3e]">{course.title}</h3><p className="mt-3 line-clamp-3 leading-6 text-[#607a7c]">{course.shortDescription ?? course.tagline ?? "Explore this practical Academy program."}</p><div className="mt-6 flex items-center justify-between border-t border-[#e2ebe2] pt-4 text-sm"><span className="font-medium text-[#547779]">{course.level}</span><span className="font-semibold text-[#17494b]">{Number(course.price) === 0 ? "Free access" : `₦${Number(course.price).toLocaleString()}`}</span></div></Link>) : <div className="col-span-full rounded-3xl border border-dashed border-[#bdd2c6] bg-white/50 p-8 text-center text-[#607a7c]">New Academy programs will appear here as they are published.</div>}</div></div></section>
+
+      <section className="py-20 sm:py-28"><div className="container grid gap-10 lg:grid-cols-[1.02fr_.98fr] lg:items-start"><div>{sectionTitle("Referral challenge", "Make learning more social — and more useful.", "Every student receives a personal referral link after registering. The referral count and leaderboard are derived from qualified registrations, not clicks or made-up rankings.")}<Link href="/leaderboard"><Button className="mt-7 bg-[#123a3c] text-white hover:bg-[#214f50]">View the leaderboard <Trophy className="ml-2 h-4 w-4" /></Button></Link></div><div className="overflow-hidden rounded-3xl border border-[#d6e2d7] bg-[#123a3c] p-2 academy-shadow"><div className="rounded-[1.3rem] bg-[#17494b] p-5 sm:p-7"><div className="flex items-center justify-between"><div><div className="font-mono-brand text-[0.65rem] uppercase tracking-[0.18em] text-[#d4f36b]">Verified rankings</div><h3 className="mt-2 text-xl font-semibold text-white">Campaign leaderboard</h3></div><Trophy className="h-8 w-8 text-[#d4f36b]" /></div><div className="mt-6 space-y-3">{data?.leaderboard.length ? data.leaderboard.slice(0, 5).map((entry) => <div key={entry.rank} className="flex items-center gap-3 rounded-2xl bg-white/[0.07] px-4 py-3"><span className="font-mono-brand text-sm text-[#d4f36b]">{String(entry.rank).padStart(2, "0")}</span><span className="min-w-0 flex-1 truncate text-sm font-medium text-white">{entry.name}</span><span className="text-xs text-white/55">{entry.referrals} qualified</span></div>) : <div className="rounded-2xl bg-white/[0.07] p-5 text-sm leading-6 text-white/65">The leaderboard will appear once qualified student referrals are recorded.</div>}</div></div></div></div></section>
+
+      <section className="bg-[#e8f0e4] py-20"><div className="container"><div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">{sectionTitle("BuduTech notes", "Ideas for building your digital advantage.", "Explore concise guides around websites, AI, business technology, and productive digital work.")}<Link href="/blog"><Button variant="outline" className="shrink-0 border-[#9abbb1] text-[#17494b]">Browse resources <ArrowRight className="ml-2 h-4 w-4" /></Button></Link></div><div className="mt-10 grid gap-4 md:grid-cols-3">{data?.recentArticles.length ? data.recentArticles.map((post) => <Link href={`/blog/${post.slug}`} key={post.id} className="group rounded-2xl bg-[#f8fbf5] p-5 transition-colors hover:bg-white"><div className="font-mono-brand text-[0.65rem] uppercase tracking-[0.15em] text-[#2c7e7c]">{post.category}</div><h3 className="mt-4 text-xl font-semibold leading-6 tracking-[-0.035em] text-[#173d3f]">{post.title}</h3><p className="mt-3 line-clamp-2 text-sm leading-6 text-[#617c7e]">{post.summary}</p><div className="mt-5 inline-flex items-center text-sm font-semibold text-[#216c6d]">Read note <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" /></div></Link>) : <div className="col-span-full rounded-2xl bg-[#f8fbf5] p-6 text-[#617c7e]">Notes are being prepared for the resource hub.</div>}</div></div></section>
+      <section className="bg-[#123a3c] py-16 text-center"><div className="container max-w-3xl"><div className="font-mono-brand text-xs uppercase tracking-[0.2em] text-[#d4f36b]">Your next step can be small</div><h2 className="mt-4 font-display text-4xl leading-tight tracking-[-0.045em] text-white sm:text-5xl">Start with one session. Leave with a direction.</h2><p className="mx-auto mt-5 max-w-xl leading-7 text-white/65">Reserve a place in the next training and see what practical technology education can unlock for your work.</p><div className="mt-8">{isAuthenticated ? <Link href="/dashboard"><Button size="lg" className="bg-[#d4f36b] text-[#123a3c] hover:bg-[#c7e85c]">Go to my learning</Button></Link> : <Button size="lg" onClick={startLogin} className="bg-[#d4f36b] text-[#123a3c] hover:bg-[#c7e85c]">Create my student account</Button>}</div></div></section>
+    </main>
+    <footer className="bg-[#0d2e30] py-8 text-white/60"><div className="container flex flex-col justify-between gap-4 text-sm sm:flex-row"><span>© {new Date().getFullYear()} BuduTech Academy</span><div className="flex gap-5"><Link href="/courses" className="hover:text-white">Courses</Link><Link href="/blog" className="hover:text-white">Resources</Link><Link href="/leaderboard" className="hover:text-white">Leaderboard</Link></div></div></footer>
+  </div>;
 }

@@ -21,15 +21,22 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { BookOpen, GraduationCap, LayoutDashboard, LogOut, PanelLeft, Trophy, Users } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+const studentMenuItems = [
+  { icon: LayoutDashboard, label: "My learning", path: "/dashboard" },
+  { icon: BookOpen, label: "Explore courses", path: "/courses" },
+  { icon: Trophy, label: "Leaderboard", path: "/leaderboard" },
+];
+
+const adminMenuItems = [
+  { icon: LayoutDashboard, label: "Control center", path: "/admin" },
+  { icon: BookOpen, label: "Course catalogue", path: "/courses" },
+  { icon: Users, label: "Student view", path: "/dashboard" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -110,6 +117,7 @@ function DashboardLayoutContent({
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const menuItems = user?.role === "admin" ? adminMenuItems : studentMenuItems;
   const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
 
@@ -168,8 +176,8 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    <span className="font-semibold tracking-tight truncate">
+                      BuduTech Academy
                   </span>
                 </div>
               ) : null}

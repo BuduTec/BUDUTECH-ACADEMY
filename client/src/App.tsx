@@ -5,12 +5,34 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Admin from "./pages/Admin";
+import LessonPlayer from "./pages/LessonPlayer";
+import Leaderboard from "./pages/Leaderboard";
+import CertificateView from "./pages/CertificateView";
+import CheckoutVerify from "./pages/CheckoutVerify";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/courses"} component={Courses} />
+      <Route path={"/courses/:slug"} component={CourseDetail} />
+      <Route path={"/blog"} component={Blog} />
+      <Route path={"/blog/:slug"} component={BlogPost} />
+      <Route path={"/register"} component={Register} />
+      <Route path={"/dashboard"} component={Dashboard} />
+      <Route path={"/learn/:courseId/:lessonId"} component={LessonPlayer} />
+      <Route path={"/leaderboard"} component={Leaderboard} />
+      <Route path={"/certificates/:code"} component={CertificateView} />
+      <Route path={"/checkout/verify"} component={CheckoutVerify} />
+      <Route path={"/admin"} component={Admin} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

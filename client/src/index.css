@@ -175,3 +175,23 @@
     }
   }
 }
+
+@layer base {
+  body {
+    font-family: "DM Sans", sans-serif;
+    letter-spacing: -0.01em;
+    background: #fbfcf7;
+    color: #163c3e;
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: "Playfair Display", serif; }
+  .font-mono-brand { font-family: "DM Mono", monospace; }
+  .noise-grid {
+    background-image: linear-gradient(to right, rgb(199 231 218 / 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgb(199 231 218 / 0.12) 1px, transparent 1px);
+    background-size: 34px 34px;
+  }
+  .academy-shadow { box-shadow: 0 24px 70px rgb(18 58 60 / 0.18); }
+  .soft-shadow { box-shadow: 0 12px 32px rgb(37 76 67 / 0.08); }
+}

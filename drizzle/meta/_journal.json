@@ -1,5 +1,41 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1786537709613,
+      "tag": "0000_curious_gateway",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1786540504215,
+      "tag": "0001_tense_plazm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1786541163750,
+      "tag": "0002_handy_ogun",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1786541416197,
+      "tag": "0003_sleepy_unicorn",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1786549614399,
+      "tag": "0004_white_paper_doll",
+      "breakpoints": true
+    }
+  ]
 }
